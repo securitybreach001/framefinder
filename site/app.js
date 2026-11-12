@@ -9,6 +9,11 @@
   const safe = str => String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const validUrl = raw => { try { const u=new URL(raw); return ['https:','http:'].includes(u.protocol)?u.href:'#'; } catch {return '#';} };
   const dt = str => {if(!str)return 'Not run';const d=new Date(str);return Number.isNaN(d.getTime())?'Not run':d.toLocaleString('en-CA',{timeZone:'America/Vancouver',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});};
+  const postedDate = str => {
+    if(!str)return 'Date not published';
+    const d=new Date(String(str).length===10?`${str}T12:00:00Z`:str);
+    return Number.isNaN(d.getTime())?'Date not published':d.toLocaleDateString('en-CA',{timeZone:'UTC',month:'short',day:'numeric',year:'numeric'});
+  };
   const save = () => {try{localStorage.setItem(storeKey,JSON.stringify(statuses));}catch(e){console.warn('Browser storage not available',e);}};
   function setStatus(id, status) { if(statuses[id] === status)delete statuses[id]; else statuses[id]=status; save();render(); }
   function summary() {
@@ -52,14 +57,16 @@
     const sourceBadge=(x)=>{
       const lab=String(x.label||'Source');const l=lab.toLowerCase();
       const badge=l.includes('linkedin')?'in':l.includes('indeed')?'i':l==='official'?'◈':lab.slice(0,2).toUpperCase();
-      const tooltip=lab==='Official'?'Official career site':lab;
+      const tooltip=lab==='Official'?'Official career site':`${lab}${x.verified_at?' · verified '+postedDate(x.verified_at):''}`;
       return `<a class="source-badge" target="_blank" rel="noopener noreferrer" href="${safe(validUrl(x.url))}" title="${safe(tooltip)}" aria-label="Advertised on ${safe(tooltip)}"><span class="source-symbol">${safe(badge)}</span>${safe(lab)}</a>`;
     };
     $('jobs').innerHTML=jobs.map(j=>{
       const status=statuses[j.id]||'';const initials=(j.company||'J').split(/\s+/).slice(0,2).map(w=>w.slice(0,1)).join('');
       const why=(j.reasons||[]).join(' · ');
       const sources=(j.sources&&j.sources.length?j.sources:[{label:'Official',url:j.url}]).map(sourceBadge).join('');
-      return `<article class="job job-row"><div class="job-main"><div class="job-icon" aria-hidden="true">${safe(initials)}</div><div class="job-info"><div class="company">${safe(j.company)}</div><h3><a target="_blank" rel="noopener noreferrer" href="${safe(validUrl(j.url))}">${safe(j.title)}</a></h3><div class="job-meta"><span class="pill ${j.tier==='match'?'match':'review'}">${j.tier==='match'?'MATCH':'VERIFY'}</span>${status?`<span class="pill ${safe(status)}">${safe(status.toUpperCase())}</span>`:''}<span>${j.score}/100</span><span>· Found ${safe(dt(j.first_seen))}</span></div></div></div><div class="job-pay"><small>PAY</small><strong>${safe(j.salary||'Not listed')}</strong></div><div class="job-place"><small>WORK ARRANGEMENT</small><strong>${safe(j.arrangement||'Not specified')}</strong><span>${safe(j.location||'Location not verified')}</span></div><div class="job-source"><small>ADVERTISED ON</small><div class="source-chips">${sources}</div></div><div class="job-note-row"><span>${safe(why)}</span><div class="job-actions"><button type="button" data-action="saved" data-id="${safe(j.id)}" class="${status==='saved'?'is-saved':''}">${status==='saved'?'★ Saved':'☆ Save'}</button><button type="button" data-action="applied" data-id="${safe(j.id)}" class="${status==='applied'?'is-applied':''}">✓ Applied</button><button type="button" data-action="hidden" data-id="${safe(j.id)}">${status==='hidden'?'Restore':'✕'}</button><a target="_blank" rel="noopener noreferrer" href="${safe(validUrl(j.url))}">Apply ↗</a></div></div></article>`;
+      const posting=j.posted_at?`Posted ${postedDate(j.posted_at)}`:'Posted date not provided';
+      const postingSource=j.posted_source?` title="${safe(j.posted_source)}"`:'';
+      return `<article class="job job-row"><div class="job-main"><div class="job-icon" aria-hidden="true">${safe(initials)}</div><div class="job-info"><div class="company">${safe(j.company)}</div><h3><a target="_blank" rel="noopener noreferrer" href="${safe(validUrl(j.url))}">${safe(j.title)}</a></h3><div class="job-meta"><span class="pill ${j.tier==='match'?'match':'review'}">${j.tier==='match'?'MATCH':'VERIFY'}</span>${status?`<span class="pill ${safe(status)}">${safe(status.toUpperCase())}</span>`:''}<span>${j.score}/100</span><span${postingSource}>· ${safe(posting)}</span><span>· Found ${safe(dt(j.first_seen))}</span></div></div></div><div class="job-pay"><small>PAY</small><strong>${safe(j.salary||'Not listed')}</strong></div><div class="job-place"><small>WORK ARRANGEMENT</small><strong>${safe(j.arrangement||'Not specified')}</strong><span>${safe(j.location||'Location not verified')}</span></div><div class="job-source"><small>ADVERTISED ON</small><div class="source-chips">${sources}</div></div><div class="job-note-row"><span>${safe(why)}</span><div class="job-actions"><button type="button" data-action="saved" data-id="${safe(j.id)}" class="${status==='saved'?'is-saved':''}">${status==='saved'?'★ Saved':'☆ Save'}</button><button type="button" data-action="applied" data-id="${safe(j.id)}" class="${status==='applied'?'is-applied':''}">✓ Applied</button><button type="button" data-action="hidden" data-id="${safe(j.id)}">${status==='hidden'?'Restore':'✕'}</button><a target="_blank" rel="noopener noreferrer" href="${safe(validUrl(j.url))}">Apply ↗</a></div></div></article>`;
     }).join('');
     const empty=jobs.length===0;$('empty').classList.toggle('hidden',!empty);
     $('empty-title').textContent=!data.last_run?'Your radar is warming up.':'No roles in this view.';
