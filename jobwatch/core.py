@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / "data" / "jobs.json"
 SOURCES_PATH = ROOT / "config" / "sources.json"
 SITE_PATH = ROOT / "site" / "data" / "jobs.json"
+VERIFIED_ADS_PATH = ROOT / "config" / "verified_ads.json"
 HEADERS = {"User-Agent": "HoudiniJobHunter/1.0 (personal job monitor; public listings)", "Accept": "application/json,text/html;q=0.9,*/*;q=0.8"}
 TIMEOUT = 18
 LOG = logging.getLogger("jobwatch")
@@ -39,7 +40,8 @@ CANADA = re.compile(r"\b(canada|canadian|canada.wide|across canada|canadians|bri
 VANCOUVER = re.compile(r"\b(vancouver|burnaby|richmond|new westminster|surrey|north vancouver|west vancouver|coquitlam|delta|port moody|port coquitlam|metro vancouver)\b", re.I)
 US_ONLY = re.compile(r"\b(united states (only|remote|based)|us[- ]only|usa[- ]only|u\.s\. (residents|only|based)|must (reside|live|be located) in (the )?(usa|united states)|authorized to work in (the )?(u\.s\.|usa|united states))\b", re.I)
 WORLDWIDE = re.compile(r"\b(worldwide|anywhere|global|globally|no location restrictions|any country)\b", re.I)
-SALARY = re.compile(r'(?i)(?:CAD|CA\$|\$)\s*\d[\d,]*(?:\.\d+)?\s*(?:[-–—]|to)\s*(?:CAD|CA\$|\$)?\s*\d[\d,]*(?:\.\d+)?\s*(?:/(?:year|yr|hour|hr|week)|per (?:year|hour|week)|annually)?')
+MONEY = r'(?:CAD\s*)?(?:CA\$|\$)\s*(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?'
+SALARY = re.compile(rf'(?i)(?P<low>{MONEY})\s*(?:[-–—]|\bto\b|\band\b)\s*(?P<high>{MONEY})')
 SIGNAL_TERMS = re.compile(r'(?i)\b(staffing up|hiring|recruitment|recruiting|greenlit|greenlight|new animated|animation slate|production begins|production underway|animation production|opens? (a )?(new )?studio|expansion|expanding|new series|new feature|renewed for|commissioned|new season)\b')
 STUDIO_SIGNAL = re.compile(r'(?i)\b(animation|animated|studio|feature|series|fx|houdini|cgi|cg)\b')
 EOI = re.compile(r"\b(expression of interest|general application|talent pool|evergreen)\b", re.I)
@@ -286,6 +288,31 @@ def fetch_html(src, session=None):
     return enrich_candidate_details(candidates,session)
 
 
+def job_posted_at(soup, expected_title):
+    """Trust only a specific JobPosting date, not arbitrary page timestamps."""
+    for script in soup.select('script[type="application/ld+json"]'):
+        try:
+            tree=json.loads(script.string or script.get_text())
+        except (ValueError, TypeError):
+            continue
+        def walk(obj):
+            if isinstance(obj,list):
+                for el in obj: yield from walk(el)
+            elif isinstance(obj,dict):
+                kind=obj.get('@type','')
+                if kind=='JobPosting' or (isinstance(kind,list) and 'JobPosting' in kind):yield obj
+                for el in obj.values():
+                    if isinstance(el,(dict,list)):yield from walk(el)
+        for posting in walk(tree):
+            title=plain(posting.get('title',''))
+            if title and normalized_words(title)!=normalized_words(expected_title):
+                continue
+            published=posting.get('datePosted')
+            if isinstance(published,str) and re.match(r'^\d{4}-\d{2}-\d{2}',published):
+                return published
+    return None
+
+
 def enrich_candidate_details(candidates, session=None):
     """Fetch only candidate titles to avoid crawling an entire careers board."""
     result=[]
@@ -297,6 +324,8 @@ def enrich_candidate_details(candidates, session=None):
         try:
             resp=http_get(job['url'],session)
             soup=BeautifulSoup(resp.text,'html.parser')
+            if not job.get('posted_at'):
+                job['posted_at']=job_posted_at(soup,job['title'])
             main=soup.find('main') or soup.find('article') or soup.body or soup
             for tag in main(['script','style','nav','header','footer','form']):tag.decompose()
             description=main.get_text(' ',strip=True)
@@ -366,9 +395,26 @@ def guess_arrangement(j):
 
 
 def salary_hint(j):
-    # Source provided salary preferred; otherwise literal quoted ranges in job text.
-    if j.get('salary'):return str(j['salary'])[:90]
-    m=SALARY.search(j.get('description','')[:8000]);return m.group(0)[:90] if m else 'Not listed'
+    """Extract explicit two-amount salary ranges from employer descriptions.
+
+    Supports $80,000-$90,000, $80,000 to $90,000 and
+    'the salary range is $80,000 and $90,000 CAD per year'.
+    """
+    if j.get('salary') and j['salary']!='Not listed':return str(j['salary'])[:90]
+    desc=j.get('description','')
+    match=SALARY.search(desc)
+    if not match:return 'Not listed'
+    low=float(re.sub(r'[^\d.]','',match.group('low')))
+    high=float(re.sub(r'[^\d.]','',match.group('high')))
+    if low<=0 or high<low or high>10000000:return 'Not listed'
+    context=desc[max(0,match.start()-100):min(len(desc),match.end()+80)]
+    curr='CAD ' if re.search(r'\bCAD\b|CA\$',context,re.I) else ''
+    period=''
+    if re.search(r'(?i)(per\s+year|/\s*(year|yr)|annually|annual\s+salary)',context):period='/year'
+    elif re.search(r'(?i)(per\s+(hour|hr)|/\s*(hour|hr)|hourly)',context):period='/hour'
+    elif re.search(r'(?i)(per\s+week|/\s*(week|wk)|weekly)',context):period='/week'
+    fmt=lambda val:f'{val:,.0f}' if val.is_integer() else f'{val:,.2f}'
+    return f'{curr}${fmt(low)}–${fmt(high)}{period}'
 
 
 def grouped_jobs(jobs):
@@ -386,6 +432,9 @@ def grouped_jobs(jobs):
             target['original_ids'].append(j['id'])
             target['first_seen']=min(target.get('first_seen',''),j.get('first_seen',''))
             if target.get('salary','Not listed')=='Not listed' and salary_hint(j)!='Not listed':target['salary']=salary_hint(j)
+            if not target.get('posted_at') and j.get('posted_at'):
+                target['posted_at']=j['posted_at']
+                target['posted_source']=j.get('posted_source','Employer or job feed')
             if target.get('arrangement')=='Not specified' and guess_arrangement(j)!='Not specified':target['arrangement']=guess_arrangement(j)
             if j.get('location') and j['location'] not in target.get('location','') and target.get('arrangement')=='Remote':
                 target['location']=target['location'] or j['location']
@@ -398,6 +447,46 @@ def grouped_jobs(jobs):
             official=next((x for x in j['sources'] if x['label']=='Official'),j['sources'][0]);j['url']=official['url']
     return list(groups.values())
 
+
+def load_verified_ads(path=VERIFIED_ADS_PATH):
+    """Hand-verified third-party listings; never automatic LinkedIn/Indeed scraping."""
+    path=Path(path)
+    if not path.exists():return []
+    data=json.loads(path.read_text(encoding='utf-8'))
+    return data if isinstance(data,list) else []
+
+
+def attach_verified_ads(groups, ads, today=None):
+    """Add only exact company/title cross-posts, verified in the last 30 days.
+
+    This adds evidence links to existing jobs but NEVER creates a new job.
+    """
+    from datetime import date, timedelta
+    today=today or date.today()
+    index={group_key(g):g for g in groups}
+    hosts={'linkedin':('linkedin.com',),'indeed':('indeed.com',)}
+    for item in ads:
+        current=index.get(group_key(item))
+        if current is None:continue
+        if item.get('posted_at') and not current.get('posted_at'):
+            current['posted_at']=item['posted_at']
+            current['posted_source']=item.get('posted_source','Third-party report')
+        for entry in item.get('sources',[]):
+            label=str(entry.get('label','')).strip()
+            address=str(entry.get('url','')).strip()
+            if label.lower() not in hosts:continue
+            parsed=urlparse(address)
+            host=(parsed.hostname or '').lower()
+            if parsed.scheme!='https' or not any(host==d or host.endswith('.'+d) for d in hosts[label.lower()]):
+                continue
+            try:
+                checked=date.fromisoformat(entry.get('verified_at',''))
+            except (TypeError,ValueError):continue
+            if checked>today or today-checked>timedelta(days=30):continue
+            if any(x.get('label','').lower()==label.lower() for x in current['sources']):continue
+            current['sources'].append({'label':label,'url':address,'kind':'verified_external','verified_at':checked.isoformat()})
+        current['sources'].sort(key=lambda x:(x['label']!='Official',x['label'].lower()))
+    return groups
 
 
 def fetch_remotive(src,session=None):
@@ -522,8 +611,14 @@ def merge_state(state, source_results, now):
             if tier=='excluded':continue
             jid=job['id'];seen.add(jid)
             existing=state['jobs'].get(jid,{})
+            extracted_salary=salary_hint(job)
+            if extracted_salary=='Not listed':extracted_salary=existing.get('salary','Not listed')
+            arrangement=guess_arrangement(job)
+            if arrangement=='Not specified':arrangement=existing.get('arrangement','Not specified')
             record={**existing,**job,'tier':tier,'score':score,'reasons':reasons,
                     'first_seen':existing.get('first_seen',now),'last_seen':now,'active':True,
+                    'salary':extracted_salary,'arrangement':arrangement,
+                    'posted_at':job.get('posted_at') or existing.get('posted_at'),
                     'notified':existing.get('notified',False)}
             # Description should stay in repo only if needed? Keep excerpt, not full content.
             record['excerpt']=job.get('description','')[:320]
@@ -648,6 +743,7 @@ def run(sources_path=SOURCES_PATH,state_path=STATE_PATH,site_path=SITE_PATH, fet
             if job['tier']=='match' and job['active'] and group_key(job) in notified_keys:
                 job['notified']=True
     active=grouped_jobs([j for j in state['jobs'].values() if j.get('active')])
+    attach_verified_ads(active,load_verified_ads())
     signals=sorted(state['signals'].values(),key=lambda x:x.get('published_at') or x.get('first_seen',''),reverse=True)[:120]
     from datetime import timedelta
     threshold=datetime.now(timezone.utc)-timedelta(days=14)
