@@ -1,0 +1,62 @@
+
+name: Framefinder - Search and publish
+
+on:
+  schedule:
+    - cron: '12 8,18 * * *'
+      timezone: 'America/Vancouver'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/jobs.json'
+      - 'site/data/jobs.json'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: framefinder
+  cancel-in-progress: false
+
+jobs:
+  check-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Test
+        run: python -m unittest discover -s tests -q
+      - name: Find jobs and early signals
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m jobwatch
+      - name: Save job history
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/jobs.json site/data/jobs.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: refresh listings'
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
