@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "last_run": "2026-11-12T22:14:30+00:00",
+  "last_run": "2026-11-12T22:16:01+00:00",
   "sources": {
     "stellar": {
       "name": "Stellar Creative Lab",
       "kind": "jazzhr",
       "url": "https://stellarcreativelab.applytojob.com/apply",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 4,
       "message": "Direct JazzHR career board"
@@ -15,7 +15,7 @@
       "name": "Atomic Cartoons",
       "kind": "greenhouse",
       "url": "https://job-boards.greenhouse.io/atomiccartoons",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 3,
       "message": "Official Greenhouse job board"
@@ -24,7 +24,7 @@
       "name": "Sony Pictures Imageworks",
       "kind": "greenhouse",
       "url": "https://job-boards.greenhouse.io/sonypicturesimageworks",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 45,
       "message": "Mixed live-action/animation studio; uncertain project roles are review-only"
@@ -33,7 +33,7 @@
       "name": "Bardel Entertainment",
       "kind": "workable",
       "url": "https://apply.workable.com/bardel-entertainment/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 0,
       "message": "Workable public career listings"
@@ -42,7 +42,7 @@
       "name": "ICON Creative Studio",
       "kind": "bamboohr",
       "url": "https://iconcreative.bamboohr.com/careers",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 6,
       "message": "Official BambooHR career listings (public careers/list endpoint)"
@@ -51,7 +51,7 @@
       "name": "Mainframe Studios",
       "kind": "html",
       "url": "https://www.mainframe.ca/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -60,16 +60,16 @@
       "name": "Netflix Animation",
       "kind": "eightfold",
       "url": "https://explore.jobs.netflix.net/careers?query=Animation",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
-      "message": "429 Client Error: TOO MANY REQUESTS for url: https://explore.jobs.netflix.net/api/apply/v2/jobs?domain=netflix.com&start=40&num=10"
+      "message": "429 Client Error: TOO MANY REQUESTS for url: https://explore.jobs.netflix.net/api/apply/v2/jobs?domain=netflix.com&start=210&num=10"
     },
     "disney": {
       "name": "Walt Disney Animation Studios",
       "kind": "html",
       "url": "https://www.disneycareers.com/en/business/custom_fields.industrycustomfield/walt%20disney%20animation%20studios/391/5",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -78,7 +78,7 @@
       "name": "Arcana Studio",
       "kind": "html",
       "url": "https://arcana.com/careers/application/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 0,
       "message": "Official no-openings status page"
@@ -87,7 +87,7 @@
       "name": "Remote jobs · Houdini",
       "kind": "jobicy",
       "url": "https://jobicy.com/jobs-rss-feed",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 0,
       "message": "Remote job discovery, employer geography must permit Canada"
@@ -96,7 +96,7 @@
       "name": "Remote jobs · Procedural",
       "kind": "jobicy",
       "url": "https://jobicy.com/jobs-rss-feed",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 0,
       "message": "Broader non-entertainment Houdini-adjacent jobs"
@@ -105,7 +105,7 @@
       "name": "Remote jobs · Simulation",
       "kind": "jobicy",
       "url": "https://jobicy.com/jobs-rss-feed",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 18,
       "message": "Simulation and technical roles"
@@ -114,7 +114,7 @@
       "name": "WildBrain Studios",
       "kind": "html",
       "url": "https://www.wildbrain.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -123,7 +123,7 @@
       "name": "Guru Studio",
       "kind": "html",
       "url": "https://gurustudio.com/careers",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -132,7 +132,7 @@
       "name": "Reel FX Animation",
       "kind": "html",
       "url": "https://careers.reelfx.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -141,7 +141,7 @@
       "name": "Mercury Filmworks",
       "kind": "html",
       "url": "https://mercuryfilmworks.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -150,7 +150,7 @@
       "name": "Titmouse Vancouver",
       "kind": "html",
       "url": "https://titmouse.net/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -159,7 +159,7 @@
       "name": "Brown Bag Films",
       "kind": "html",
       "url": "https://www.brownbagfilms.com/about-us/careers",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -168,7 +168,7 @@
       "name": "Squeeze Studio",
       "kind": "html",
       "url": "https://squeezestudio.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -177,7 +177,7 @@
       "name": "Jam Filled Entertainment",
       "kind": "html",
       "url": "https://www.jamfilled.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -186,7 +186,7 @@
       "name": "Nelvana",
       "kind": "html",
       "url": "https://www.corusent.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -195,7 +195,7 @@
       "name": "9 Story Media Group",
       "kind": "html",
       "url": "https://9story.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -204,7 +204,7 @@
       "name": "Pipeline Studios",
       "kind": "html",
       "url": "https://www.pipelinestudios.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "404 Client Error: Not Found for url: https://www.pipelinestudios.com/careers/"
@@ -213,7 +213,7 @@
       "name": "Industrial Brothers",
       "kind": "html",
       "url": "https://www.industrialbrothers.com/careers",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -222,7 +222,7 @@
       "name": "Sphere Animation",
       "kind": "html",
       "url": "https://www.sphere-media.com/en/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -231,7 +231,7 @@
       "name": "Mikros Animation",
       "kind": "html",
       "url": "https://www.mikrosanimation.com/en/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "404 Client Error: Not Found for url: https://www.mikrosanimation.com/en/careers/"
@@ -240,7 +240,7 @@
       "name": "Cinesite Animation",
       "kind": "html",
       "url": "https://www.cinesite.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -249,7 +249,7 @@
       "name": "Xentrix Studios",
       "kind": "html",
       "url": "https://www.xentrixstudios.com/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -258,7 +258,7 @@
       "name": "Steamroller Animation",
       "kind": "html",
       "url": "https://www.steamrolleranimation.com/careers",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -267,7 +267,7 @@
       "name": "Oasis Animation",
       "kind": "html",
       "url": "https://www.oasisanimation.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -276,7 +276,7 @@
       "name": "Yeti Farm Creative",
       "kind": "html",
       "url": "https://yetifarmcreative.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -285,7 +285,7 @@
       "name": "Tangent Animation",
       "kind": "html",
       "url": "https://www.tangent-animation.ca/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "404 Client Error: Not Found for url: https://www.tangent-animation.com/"
@@ -294,7 +294,7 @@
       "name": "Lighthouse Studios",
       "kind": "html",
       "url": "https://lighthousestudios.ca/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -303,7 +303,7 @@
       "name": "Wind Sun Sky Entertainment",
       "kind": "html",
       "url": "https://windsunsky.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -312,16 +312,16 @@
       "name": "Wild Child Animation",
       "kind": "html",
       "url": "https://wildchildanimation.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
-      "message": "HTTPSConnectionPool(host='wildchildanimation.com', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='wildchildanimation.com', port=443) at 0x72ff1cb81d30>, 'Connection to wildchildanimation.co"
+      "message": "HTTPSConnectionPool(host='wildchildanimation.com', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='wildchildanimation.com', port=443) at 0x7328a8aff170>, 'Connection to wildchildanimation.co"
     },
     "marblemedia": {
       "name": "Marblemedia",
       "kind": "html",
       "url": "https://marblemedia.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -330,7 +330,7 @@
       "name": "Rainmaker / Mainframe legacy",
       "kind": "html",
       "url": "https://www.mainframe.ca/careers/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -339,7 +339,7 @@
       "name": "Flight School Studio",
       "kind": "html",
       "url": "https://flightschoolstudio.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "error",
       "count": 0,
       "message": "No parseable job links. This page may require JavaScript or a new adapter."
@@ -348,7 +348,7 @@
       "name": "Remotive · houdini",
       "kind": "remotive",
       "url": "https://remotive.com/remote-jobs",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 14,
       "message": "Public remote jobs feed; Canadian eligibility checked"
@@ -357,7 +357,7 @@
       "name": "Remotive · fx",
       "kind": "remotive",
       "url": "https://remotive.com/remote-jobs",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 14,
       "message": "Public remote jobs feed; Canadian eligibility checked"
@@ -366,7 +366,7 @@
       "name": "Remotive · procedural",
       "kind": "remotive",
       "url": "https://remotive.com/remote-jobs",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 14,
       "message": "Public remote jobs feed; Canadian eligibility checked"
@@ -375,7 +375,7 @@
       "name": "Remotive · simulation",
       "kind": "remotive",
       "url": "https://remotive.com/remote-jobs",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 14,
       "message": "Public remote jobs feed; Canadian eligibility checked"
@@ -384,7 +384,7 @@
       "name": "Arbeitnow",
       "kind": "arbeitnow",
       "url": "https://www.arbeitnow.com/",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 0,
       "message": "Public job board API"
@@ -393,7 +393,7 @@
       "name": "Animation hiring & production news",
       "kind": "rss_signal",
       "url": "https://news.google.com/rss/search?q=%28%22animation%20studio%22%20OR%20%22animated%20feature%22%20OR%20%22animated%20series%22%29%20%28hiring%20OR%20greenlit%20OR%20production%20OR%20expansion%29%20Canada%20when%3A14d&hl=en-CA&gl=CA&ceid=CA:en",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 1,
       "message": "Public Google News RSS. Leads only, not confirmed vacancies."
@@ -402,7 +402,7 @@
       "name": "Animation studio FX staffing signals",
       "kind": "rss_signal",
       "url": "https://news.google.com/rss/search?q=%28Netflix%20Animation%20OR%20WildBrain%20OR%20Mainframe%20OR%20Stellar%20Animation%20OR%20Disney%20Animation%20OR%20ICON%20Creative%20OR%20Bardel%20OR%20Arcana%20OR%20Atomic%20Cartoons%20OR%20Reel%20FX%20OR%20Guru%20Studio%29%20%28hiring%20OR%20production%20OR%20animation%20OR%20series%29%20when%3A14d&hl=en-CA&gl=CA&ceid=CA:en",
-      "last_checked": "2026-11-12T22:14:30+00:00",
+      "last_checked": "2026-11-12T22:16:01+00:00",
       "status": "ok",
       "count": 1,
       "message": "Public Google News RSS. Leads only, not confirmed vacancies."
@@ -430,7 +430,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Asset TD VANCOUVER, BC, Canada Full Time Stellar Creative Lab Experienced Share At Stellar, we aim to build a studio where people actually want to work. We face productions inevitable ups and downs as a supportive, truly connected team, prioritizing open communication over anyone working in isolation. We value honesty,",
@@ -458,7 +458,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Pipeline TD - DMP & LRC VANCOUVER, BC, Canada Full Time Stellar Creative Lab Experienced Share At Stellar, we aim to build a studio where people actually want to work. We face production's inevitable ups and downs as a supportive, truly connected team, prioritizing open communication over anyone working in isolation. W",
@@ -486,7 +486,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "3D FX Artist (mid- senior) Vancouver, BC, Canada Full Time Experienced Share At Stellar, we aim to build a studio where people actually want to work. We face productions inevitable ups and downs as a supportive, truly connected team, prioritizing open communication over anyone working in isolation. We value honesty, cr",
@@ -514,7 +514,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "3D FX Lead Vancouver, BC, Canada Full Time Experienced Share At Stellar, we aim to build a studio where people actually want to work. We face productions inevitable ups and downs as a supportive, truly connected team, prioritizing open communication over anyone working in isolation. We value honesty, creativity, and lo",
@@ -540,7 +540,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</p> <p><strong>Sony Pictures Imageworks Canada Inc.</strong></p> <p><strong>658 ",
@@ -566,7 +566,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p><strong>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</strong></p> <p><strong>Sony Pictures Imageworks Canada Inc.<br>658 Home",
@@ -592,7 +592,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p>Les Films Sony Imageworks Québec Inc. sont situés sur le territoire traditionnel non cédé des Premières Nations Kanien’keha:ka (Mohawk). Nous nous engageons à respecter les terres ancestrales et à travailler avec les communautés en vue de la réconciliation.</p> <p><strong>Les Films Sony Imageworks Québec Inc.</stron",
@@ -618,7 +618,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p>Les Films Sony Imageworks Québec Inc. est située sur les territoires non cédés et traditionnels du peuple Kanien’keha : ka (Mohawk).</p> <p>Les Films Sony Imageworks Québec Inc.</p> <p>700, rue Saint-Hubert, bureau 400, Montréal QC HY2 0C1</p> <p>Projet, temps plein</p> <p>Langue dans l’environnement de travail – Ex",
@@ -644,7 +644,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p><strong>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</strong></p> <p><strong>Sony Pictures Imageworks Canada Inc.<br>658 Home",
@@ -670,7 +670,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p><strong>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</strong></p> <p><strong>Sony Pictures Imageworks Canada Inc.<br>658 Home",
@@ -698,7 +698,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</p> <p><strong>Sony Pictures Imageworks Canada Inc.<br>658 Homer Street., Suite ",
@@ -724,7 +724,7 @@
         "Mixed VFX/animation studio; animated production not confirmed"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p><strong>Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</strong></p> <p><strong>Sony Pictures Imageworks Canada Inc.<br>658 Home",
@@ -752,7 +752,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "<p><span style=\"font-weight: 400;\">Sony Pictures Imageworks is located on the unceded traditional territory of the Musqueam, Squamish, and Tsleil-Waututh First Nations. We are committed to respecting traditional lands, and working with communities towards reconciliation.</span></p> <p><strong>Sony Pictures Imageworks C",
@@ -780,7 +780,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
@@ -808,7 +808,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
@@ -836,7 +836,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
@@ -862,7 +862,7 @@
         "Outside Vancouver; fully remote work not verified"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
@@ -890,7 +890,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
@@ -918,7 +918,7 @@
         "Vancouver / Metro Vancouver"
       ],
       "first_seen": "2026-11-12T21:51:36+00:00",
-      "last_seen": "2026-11-12T22:14:30+00:00",
+      "last_seen": "2026-11-12T22:16:01+00:00",
       "active": true,
       "notified": false,
       "excerpt": "Company Overview ICON Creative Studio is Canada’s largest independently owned animation entertainment company, located in the historic Gastown district of Vancouver, BC. Our talented team includes specialists across the entire animation pipeline, working alongside creative and management professionals to deliver outsta",
