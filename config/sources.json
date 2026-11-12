@@ -1,0 +1,399 @@
+[
+  {
+    "id": "stellar",
+    "name": "Stellar Creative Lab",
+    "kind": "jazzhr",
+    "url": "https://stellarcreativelab.applytojob.com/apply",
+    "studio": "animation",
+    "default_location": "Vancouver, BC, Canada",
+    "note": "Direct JazzHR career board"
+  },
+  {
+    "id": "atomic",
+    "name": "Atomic Cartoons",
+    "kind": "greenhouse",
+    "board": "atomiccartoons",
+    "studio": "animation",
+    "note": "Official Greenhouse job board"
+  },
+  {
+    "id": "sony",
+    "name": "Sony Pictures Imageworks",
+    "kind": "greenhouse",
+    "board": "sonypicturesimageworks",
+    "studio": "mixed",
+    "note": "Mixed live-action/animation studio; uncertain project roles are review-only"
+  },
+  {
+    "id": "bardel",
+    "name": "Bardel Entertainment",
+    "kind": "workable",
+    "board": "bardel-entertainment",
+    "studio": "animation",
+    "note": "Workable public career listings"
+  },
+  {
+    "id": "icon",
+    "name": "ICON Creative Studio",
+    "kind": "bamboohr",
+    "studio": "animation",
+    "note": "Official BambooHR career listings (public careers/list endpoint)",
+    "board": "iconcreative"
+  },
+  {
+    "id": "mainframe",
+    "name": "Mainframe Studios",
+    "kind": "html",
+    "url": "https://www.mainframe.ca/careers/",
+    "studio": "animation",
+    "default_location": "Vancouver, BC, Canada",
+    "note": "JS-rendered vacancies may require a future custom adapter"
+  },
+  {
+    "id": "netflix",
+    "name": "Netflix Animation",
+    "kind": "eightfold",
+    "url": "https://explore.jobs.netflix.net/careers?query=Animation",
+    "studio": "mixed",
+    "default_location": "",
+    "note": "Eightfold public job listing endpoint; Feature Animation roles only; source may change",
+    "host": "https://explore.jobs.netflix.net",
+    "domain": "netflix.com"
+  },
+  {
+    "id": "disney",
+    "name": "Walt Disney Animation Studios",
+    "kind": "html",
+    "url": "https://www.disneycareers.com/en/business/custom_fields.industrycustomfield/walt%20disney%20animation%20studios/391/5",
+    "studio": "animation",
+    "note": "WDAS-specific career listing"
+  },
+  {
+    "id": "arcana",
+    "name": "Arcana Studio",
+    "kind": "html",
+    "url": "https://arcana.com/careers/application/",
+    "studio": "animation",
+    "default_location": "Burnaby, BC, Canada",
+    "empty_message": "not currently hiring",
+    "note": "Official no-openings status page"
+  },
+  {
+    "id": "jobicy-houdini",
+    "name": "Remote jobs · Houdini",
+    "kind": "jobicy",
+    "tag": "houdini",
+    "studio": "other",
+    "note": "Remote job discovery, employer geography must permit Canada"
+  },
+  {
+    "id": "jobicy-procedural",
+    "name": "Remote jobs · Procedural",
+    "kind": "jobicy",
+    "tag": "procedural",
+    "studio": "other",
+    "note": "Broader non-entertainment Houdini-adjacent jobs"
+  },
+  {
+    "id": "jobicy-simulation",
+    "name": "Remote jobs · Simulation",
+    "kind": "jobicy",
+    "tag": "simulation",
+    "studio": "other",
+    "note": "Simulation and technical roles"
+  },
+  {
+    "id": "wildbrain",
+    "name": "WildBrain Studios",
+    "kind": "html",
+    "url": "https://www.wildbrain.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "guru",
+    "name": "Guru Studio",
+    "kind": "html",
+    "url": "https://gurustudio.com/careers",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "reelfx",
+    "name": "Reel FX Animation",
+    "kind": "html",
+    "url": "https://careers.reelfx.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "mercury",
+    "name": "Mercury Filmworks",
+    "kind": "html",
+    "url": "https://mercuryfilmworks.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "titmouse",
+    "name": "Titmouse Vancouver",
+    "kind": "html",
+    "url": "https://titmouse.net/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "brownbag",
+    "name": "Brown Bag Films",
+    "kind": "html",
+    "url": "https://www.brownbagfilms.com/about-us/careers",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "squeeze",
+    "name": "Squeeze Studio",
+    "kind": "html",
+    "url": "https://squeezestudio.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "jamfilled",
+    "name": "Jam Filled Entertainment",
+    "kind": "html",
+    "url": "https://www.jamfilled.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "nelvana",
+    "name": "Nelvana",
+    "kind": "html",
+    "url": "https://www.corusent.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "nine-story",
+    "name": "9 Story Media Group",
+    "kind": "html",
+    "url": "https://9story.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "pipeline",
+    "name": "Pipeline Studios",
+    "kind": "html",
+    "url": "https://www.pipelinestudios.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "industrial-brothers",
+    "name": "Industrial Brothers",
+    "kind": "html",
+    "url": "https://www.industrialbrothers.com/careers",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "sphere",
+    "name": "Sphere Animation",
+    "kind": "html",
+    "url": "https://www.sphere-media.com/en/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "mikros",
+    "name": "Mikros Animation",
+    "kind": "html",
+    "url": "https://www.mikrosanimation.com/en/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "cinesite-animation",
+    "name": "Cinesite Animation",
+    "kind": "html",
+    "url": "https://www.cinesite.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "xentrix",
+    "name": "Xentrix Studios",
+    "kind": "html",
+    "url": "https://www.xentrixstudios.com/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "steamroller",
+    "name": "Steamroller Animation",
+    "kind": "html",
+    "url": "https://www.steamrolleranimation.com/careers",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "oasis",
+    "name": "Oasis Animation",
+    "kind": "html",
+    "url": "https://www.oasisanimation.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "yeti-farm",
+    "name": "Yeti Farm Creative",
+    "kind": "html",
+    "url": "https://yetifarmcreative.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "tangent",
+    "name": "Tangent Animation",
+    "kind": "html",
+    "url": "https://www.tangent-animation.ca/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "lighthouse",
+    "name": "Lighthouse Studios",
+    "kind": "html",
+    "url": "https://lighthousestudios.ca/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "wind-sun-sky",
+    "name": "Wind Sun Sky Entertainment",
+    "kind": "html",
+    "url": "https://windsunsky.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "wilden",
+    "name": "Wild Child Animation",
+    "kind": "html",
+    "url": "https://wildchildanimation.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "marblemedia",
+    "name": "Marblemedia",
+    "kind": "html",
+    "url": "https://marblemedia.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "rainmaker",
+    "name": "Rainmaker / Mainframe legacy",
+    "kind": "html",
+    "url": "https://www.mainframe.ca/careers/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "flight-school",
+    "name": "Flight School Studio",
+    "kind": "html",
+    "url": "https://flightschoolstudio.com/",
+    "studio": "animation",
+    "source_label": "Official",
+    "note": "Public studio page. Parser may need an adapter; source health reports failures. Verify studio activity and eligibility."
+  },
+  {
+    "id": "remotive-houdini",
+    "name": "Remotive · houdini",
+    "kind": "remotive",
+    "search": "houdini",
+    "studio": "other",
+    "source_label": "Remotive",
+    "note": "Public remote jobs feed; Canadian eligibility checked"
+  },
+  {
+    "id": "remotive-fx",
+    "name": "Remotive · fx",
+    "kind": "remotive",
+    "search": "fx",
+    "studio": "other",
+    "source_label": "Remotive",
+    "note": "Public remote jobs feed; Canadian eligibility checked"
+  },
+  {
+    "id": "remotive-procedural",
+    "name": "Remotive · procedural",
+    "kind": "remotive",
+    "search": "procedural",
+    "studio": "other",
+    "source_label": "Remotive",
+    "note": "Public remote jobs feed; Canadian eligibility checked"
+  },
+  {
+    "id": "remotive-simulation",
+    "name": "Remotive · simulation",
+    "kind": "remotive",
+    "search": "simulation",
+    "studio": "other",
+    "source_label": "Remotive",
+    "note": "Public remote jobs feed; Canadian eligibility checked"
+  },
+  {
+    "id": "arbeitnow",
+    "name": "Arbeitnow",
+    "kind": "arbeitnow",
+    "studio": "other",
+    "source_label": "Arbeitnow",
+    "note": "Public job board API"
+  },
+  {
+    "id": "news-animation",
+    "name": "Animation hiring & production news",
+    "kind": "rss_signal",
+    "url": "https://news.google.com/rss/search?q=%28%22animation%20studio%22%20OR%20%22animated%20feature%22%20OR%20%22animated%20series%22%29%20%28hiring%20OR%20greenlit%20OR%20production%20OR%20expansion%29%20Canada%20when%3A14d&hl=en-CA&gl=CA&ceid=CA:en",
+    "studio": "other",
+    "note": "Public Google News RSS. Leads only, not confirmed vacancies."
+  },
+  {
+    "id": "news-fx",
+    "name": "Animation studio FX staffing signals",
+    "kind": "rss_signal",
+    "url": "https://news.google.com/rss/search?q=%28Netflix%20Animation%20OR%20WildBrain%20OR%20Mainframe%20OR%20Stellar%20Animation%20OR%20Disney%20Animation%20OR%20ICON%20Creative%20OR%20Bardel%20OR%20Arcana%20OR%20Atomic%20Cartoons%20OR%20Reel%20FX%20OR%20Guru%20Studio%29%20%28hiring%20OR%20production%20OR%20animation%20OR%20series%29%20when%3A14d&hl=en-CA&gl=CA&ceid=CA:en",
+    "studio": "other",
+    "note": "Public Google News RSS. Leads only, not confirmed vacancies."
+  }
+]

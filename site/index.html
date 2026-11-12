@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
+  <meta name="description" content="A personal job radar for animation, Houdini FX, procedural tools and simulation opportunities.">
+  <title>Framefinder — your Houdini job radar</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="mark"><span></span></span><div><strong>framefinder<span class="brand-dot">.</span></strong><small>YOUR JOB RADAR</small></div></div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-link selected" data-view="all"><span class="nav-icon">▦</span> Discover <span class="nav-count" id="nav-all">0</span></button>
+        <button class="nav-link" data-view="signals"><span class="nav-icon">⌁</span> Early signals <span class="nav-count" id="nav-signals">0</span></button>
+        <button class="nav-link" data-view="saved"><span class="nav-icon">☆</span> Saved</button>
+        <button class="nav-link" data-view="applied"><span class="nav-icon">↗</span> Applied</button>
+        <button class="nav-link" data-view="review"><span class="nav-icon">◌</span> Needs verification</button>
+        <button class="nav-link" data-view="hidden"><span class="nav-icon">⊘</span> Hidden</button>
+      </nav>
+      <div class="sidebar-rule"></div>
+      <div class="sidebar-label">THE RADAR</div>
+      <div class="mini-line"><span class="pulse"></span> <span>2 scans every day</span></div>
+      <div class="mini-line"><span class="mini-icon">◷</span> <span>8:12 AM / 6:12 PM PT</span></div>
+      <div class="mini-line"><span class="mini-icon">◎</span> <span>Vancouver + eligible remote</span></div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tag">BUILT FOR HOUDINI ARTISTS</div>
+        <p>Less searching. More making.</p>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">Powered by GitHub Actions ↗</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar"><span class="top-kicker">AUTOMATED SEARCH / VANCOUVER, BC</span><span class="top-status"><span class="pulse"></span> <span id="top-status">Ready to connect</span></span></div>
+      <header class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR CAREER, ON AUTOPILOT</div>
+          <h1>Find your next<br><em>great thing.</em></h1>
+          <p>Animation-first opportunities in Houdini, FX, procedural creation, simulation and creative tech — without the daily hunt.</p>
+        </div>
+        <div class="radar-art" aria-hidden="true"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="scanner"></div><span class="radar-core"></span><span class="radar-ping a"></span><span class="radar-ping b"></span><span class="radar-ping c"></span></div>
+      </header>
+      <section class="metrics" aria-label="Search overview">
+        <div class="metric"><div class="metric-top">MATCHED ROLES <span class="metric-symbol">↗</span></div><div class="metric-value" id="count-matches">—</div><div class="metric-foot">Animation & Houdini fits</div></div>
+        <div class="metric"><div class="metric-top">NEEDS REVIEW <span class="metric-symbol">◌</span></div><div class="metric-value" id="count-review">—</div><div class="metric-foot">Project or location unclear</div></div>
+        <div class="metric"><div class="metric-top">SOURCES ONLINE <span class="metric-symbol">◎</span></div><div class="metric-value" id="count-sources">—</div><div class="metric-foot">Career boards checked</div></div>
+        <div class="metric"><div class="metric-top">LAST SCAN <span class="metric-symbol">◷</span></div><div class="metric-value small-value" id="last-scan">Not run</div><div class="metric-foot">Automatic morning & evening</div></div>
+      </section>
+
+      <section class="results-section" id="results">
+        <div class="section-heading"><div><div class="section-kicker">THE SHORTLIST</div><h2 id="view-title">Opportunities worth a look</h2><p id="view-desc">Real openings from the companies you care about.</p></div><button class="outline-btn" id="sources-toggle" aria-expanded="false" aria-controls="source-panel"><span class="button-glyph">◎</span> Source health</button></div>
+        <section id="source-panel" class="source-panel hidden" aria-label="Job source health"><div class="source-panel-header"><strong>Career board status</strong><span>Green = reachable. Amber = needs attention.</span></div><div id="source-grid" class="source-grid"></div><p class="source-explain">A page that changes its layout can fail to provide listings. A failed source does not mean there are no jobs at that studio.</p></section>
+        <div class="search-shortcuts" aria-label="External job search shortcuts"><span>Also search:</span><a href="https://www.linkedin.com/jobs/search/?keywords=Houdini%20FX&location=Canada" target="_blank" rel="noopener noreferrer">in LinkedIn</a><a href="https://ca.indeed.com/jobs?q=Houdini+FX&l=Canada" target="_blank" rel="noopener noreferrer">in Indeed</a><a href="https://www.google.com/search?q=Houdini+FX+Artist+animation+Vancouver+jobs" target="_blank" rel="noopener noreferrer">in Google</a><small>Search shortcuts; not proof that a role is advertised there.</small></div>
+        <div class="filters">
+          <label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="Search roles, studios, skills..." aria-label="Search jobs"></label>
+          <select id="tier" aria-label="Filter by match quality"><option value="all">All opportunities</option><option value="match">Strong matches</option><option value="review">Needs verification</option></select>
+          <select id="sort" aria-label="Sort jobs"><option value="score">Best match first</option><option value="new">Recently discovered</option><option value="company">Studio A–Z</option></select>
+        </div>
+        <div class="list-heading"><div><span id="job-total">0</span> OPPORTUNITIES</div><span class="list-label">ONLY VERIFIED ADVERTISING SOURCES ARE SHOWN</span></div>
+        <div class="job-columns"><span>POSITION / STUDIO</span><span>PAY</span><span>WORK ARRANGEMENT / LOCATION</span><span>ADVERTISED ON</span></div><div id="jobs" class="jobs"></div><div id="signals" class="signals hidden"></div>
+        <div id="empty" class="empty hidden"><div class="empty-icon">✳</div><h3 id="empty-title">Your radar is warming up.</h3><p id="empty-desc">Once the first cloud scan runs, matching opportunities will appear here. You can always visit source health to see which boards are accessible.</p></div>
+      </section>
+      <footer><div><span class="footer-star">✳</span> framefinder <span class="footer-sub">Independent, free & built for one person.</span></div><div class="footer-note">Statuses are stored only in this browser · <a href="https://github.com" target="_blank" rel="noopener noreferrer">Automation runs on GitHub</a></div></footer>
+    </main>
+  </div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
