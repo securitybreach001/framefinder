@@ -28,9 +28,17 @@
   function renderSources(){
     $('source-grid').innerHTML=(data.sources||[]).map(x=>`<div class="source-item"><span class="dot ${x.status==='ok'?'ok':''}"></span><a href="${safe(validUrl(x.url))}" target="_blank" rel="noopener noreferrer">${safe(x.name)}</a><span class="source-sub">${x.status==='ok'?`${x.count||0} source openings`:'Needs attention'} · ${safe(x.status==='ok'?'Checked '+dt(x.last_checked):x.message||'Unavailable')}</span></div>`).join('') || '<p>No scan has run yet.</p>';
   }
+  const vancouverDay = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Vancouver',year:'numeric',month:'numeric',day:'numeric'});
+  let renderedDay;
   function render(){
+    renderedDay=vancouverDay.format(new Date());
+    const newJobs=new Set(data.jobs.filter(j=>{
+      const firstSeen=Date.parse(j.first_seen);
+      return statuses[j.id]!=='hidden' && Number.isFinite(firstSeen) && vancouverDay.format(firstSeen)===renderedDay;
+    }).map(j=>j.id));
+    $('nav-new').textContent=newJobs.size;
     summary(); renderSources();
-    const titles={all:['Opportunities worth a look','Real openings from the companies you care about.'],saved:['Your saved opportunities','A short list of roles you want to revisit.'],applied:['Your applications','Keep track of positions you have applied for.'],signals:['Early hiring signals','Public production news and staffing clues. These are leads, not job openings.'],review:['Needs verification','Potential fits without confirmed project type or location eligibility.'],hidden:['Hidden jobs','Roles you dismissed. Restore them any time.']};
+    const titles={all:['Opportunities worth a look','Real openings from the companies you care about.'],new:['New today','Jobs Framefinder first found today, Vancouver time.'],saved:['Your saved opportunities','A short list of roles you want to revisit.'],applied:['Your applications','Keep track of positions you have applied for.'],signals:['Early hiring signals','Public production news and staffing clues. These are leads, not job openings.'],review:['Needs verification','Potential fits without confirmed project type or location eligibility.'],hidden:['Hidden jobs','Roles you dismissed. Restore them any time.']};
     $('view-title').textContent=titles[view][0];$('view-desc').textContent=titles[view][1];
     $('signals').classList.toggle('hidden',view!=='signals');
     $('jobs').classList.toggle('hidden',view==='signals');
@@ -42,6 +50,7 @@
     let jobs=(data.jobs||[]).filter(j=>{
       const status=statuses[j.id] || '';
       if(view==='signals')return false;
+      if(view==='new' && !newJobs.has(j.id))return false;
       if(view==='saved' && status!=='saved')return false;
       if(view==='applied' && status!=='applied')return false;
       if(view==='review' && j.tier!=='review')return false;
@@ -77,5 +86,10 @@
   $('sources-toggle').addEventListener('click',()=>{const closed=$('source-panel').classList.toggle('hidden');$('sources-toggle').setAttribute('aria-expanded',String(!closed));});
   $('jobs').addEventListener('click',e=>{const el=e.target.closest('button[data-action]');if(el)setStatus(el.dataset.id,el.dataset.action);});
   fetch('./data/jobs.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Data unavailable');return r.json();}).then(d=>{data=d;render();}).catch(err=>{$('top-status').textContent='Cannot load job data';console.warn(err);render();});
+  function refreshDay(){
+    if(vancouverDay.format(new Date())!==renderedDay)render();
+  }
+  window.addEventListener('focus',refreshDay);
+  window.setInterval(refreshDay,60000);
   render();
 })();
