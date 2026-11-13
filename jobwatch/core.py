@@ -443,7 +443,7 @@ def guess_arrangement(j):
     location = j.get('location', '')
     desc = j.get('description', '')
     if re.search(r'\bhybrid\b(?![- ](?:cloud|rendering|pipeline|engine|simulation|system|workflow|approach))', location, re.I) or re.search(
-        r'\b(?:hybrid (?:role|work|schedule|model|position|arrangement)|work(?:ing)? hybrid|(?:work type|work arrangement|workplace type|location)\s*:?\s*hybrid)\b|^\s*hybrid\s*$', desc, re.I | re.M
+        r'\b(?:hybrid (?:role|work|schedule|model|position|arrangement)|work(?:ing)? hybrid|(?:work type|work arrangement|workplace type|location)\s*:?\s*hybrid)\b|^\s*hybrid(?:\s*$|[.!](?:\s|$))', desc, re.I | re.M
     ):
         return 'Hybrid'
     if j.get('remote') or REMOTE.search(location) or re.search(
