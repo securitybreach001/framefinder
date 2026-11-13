@@ -40,12 +40,23 @@
   ];
   const presence = ['Remote', 'Hybrid', 'On-site', 'Not specified'];
   const money = new Intl.NumberFormat('en-CA', {maximumFractionDigits: 2});
-  const locationKey = value => value.trim().toLowerCase();
-  const locations = job => (job.location || '').split(';').map(value => {
-    const trimmed = value.trim();
-    if (/^vancouver\s*,\s*(?:(?:bc|british columbia)\s*,\s*)?canada$/i.test(trimmed)) return 'Vancouver, BC, Canada';
-    return trimmed;
-  }).filter(Boolean);
+  const locationKey = value => value.normalize('NFKC').trim().toLowerCase();
+  const locationAliases = [
+    [/\bvancouver\s*,?\s*(?:(?:bc|british columbia)\s*,?\s*)?canada\b/i, 'Vancouver, BC, Canada'],
+    [/\b(?:montréal|montreal)\s*,\s*(?:québec|quebec|qc)\s*,\s*canada\b/i, 'Montréal, Quebec, Canada'],
+    [/\bnew york\s*,\s*(?:new york|ny)\s*,\s*(?:united states(?: of america)?|usa)\b/i, 'New York, NY, United States'],
+    [/\bbritish columbia\b|\bBC\b/i, 'British Columbia, Canada'],
+  ];
+  function locations(job) {
+    return (job.location || '').split(';').map(raw => {
+      const value = raw.trim();
+      const alias = locationAliases.find(([pattern]) => pattern.test(value));
+      if (alias) return alias[1];
+      return value.replace(/^(?:remote|hybrid|on[- ]?site|in[- ]person|in[- ]office)(?:\s*(?:[,–—-]|\bin\b|\bfrom\b)\s*|\s*$)/i, '')
+        .split(',').map(part => part.trim()).filter(Boolean).join(', ')
+        .replace(/\bUnited States of America\b/i, 'United States');
+    }).filter(Boolean);
+  }
   function salaryBand(salary) {
     const text = salary || '';
     const amounts = [...text.matchAll(/\$\s*(\d[\d,]*(?:\.\d+)?)\s*(k\b)?/gi)]
