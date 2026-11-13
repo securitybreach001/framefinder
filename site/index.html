@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1018">
   <meta name="description" content="A personal job radar for animation, Houdini FX, procedural tools and simulation opportunities.">
   <title>Framefinder — your Houdini job radar</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=job-filters">
 </head>
 <body>
   <div class="app-shell">
@@ -59,13 +59,30 @@
           <select id="tier" aria-label="Filter by match quality"><option value="all">All opportunities</option><option value="match">Strong matches</option><option value="review">Needs verification</option></select>
           <select id="sort" aria-label="Sort jobs"><option value="score">Best match first</option><option value="new">Recently discovered</option><option value="company">Studio A–Z</option></select>
         </div>
+        <div class="results-layout" id="results-layout">
+          <aside class="job-facets" id="job-facets" aria-label="Job filters">
+            <div class="facet-heading"><strong>Filter jobs</strong><button type="button" id="clear-facets">Clear all</button></div>
+            <details open><summary>Location</summary><div id="location-options"></div></details>
+            <details open><summary>Salary range</summary>
+              <label class="pay-period">Pay period <select id="pay-period"><option value="year">Annual</option><option value="hour">Hourly</option><option value="week">Weekly</option><option value="month">Monthly</option><option value="unknown">Unspecified</option></select></label>
+              <label class="pay-period">Currency <select id="pay-currency"><option value="all">All currencies</option><option value="CAD">CAD</option><option value="USD">USD</option><option value="unknown">Unspecified</option></select></label>
+              <div class="salary-bounds"><input id="pay-min" type="number" min="0" placeholder="$ Min" aria-label="Minimum pay"><span>to</span><input id="pay-max" type="number" min="0" placeholder="$ Max" aria-label="Maximum pay"></div>
+              <p id="pay-error" class="pay-error hidden" role="status">Maximum pay must be at least minimum pay.</p>
+              <div id="salary-options"></div>
+            </details>
+            <details open><summary>Job</summary><div id="role-options"></div></details>
+            <details open><summary>Presence requirement</summary><div id="presence-options"></div></details>
+          </aside>
+          <div class="job-results">
         <div class="list-heading"><div><span id="job-total">0</span> OPPORTUNITIES</div><span class="list-label">ONLY VERIFIED ADVERTISING SOURCES ARE SHOWN</span></div>
         <div class="job-columns"><span>POSITION / STUDIO</span><span>PAY</span><span>WORK ARRANGEMENT / LOCATION</span><span>ADVERTISED ON</span></div><div id="jobs" class="jobs"></div><div id="signals" class="signals hidden"></div>
         <div id="empty" class="empty hidden"><div class="empty-icon">✳</div><h3 id="empty-title">Your radar is warming up.</h3><p id="empty-desc">Once the first cloud scan runs, matching opportunities will appear here. You can always visit source health to see which boards are accessible.</p></div>
+          </div>
+        </div>
       </section>
       <footer><div><span class="footer-star">✳</span> framefinder <span class="footer-sub">Independent, free & built for one person.</span></div><div class="footer-note">Statuses are stored only in this browser · <a href="https://github.com" target="_blank" rel="noopener noreferrer">Automation runs on GitHub</a></div></footer>
     </main>
   </div>
-  <script src="./app.js?v=new-jobs" defer></script>
+  <script src="./app.js?v=job-filters" defer></script>
 </body>
 </html>
