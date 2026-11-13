@@ -33,3 +33,33 @@
 .empty-signal{padding:36px;text-align:center;color:#a7b5be}
 @media(max-width:1050px){.job-columns{display:none}.job.job-row{grid-template-columns:minmax(0,1fr) minmax(150px,.5fr)}.job-row .job-main{grid-column:1/-1}.job-row .job-pay small,.job-row .job-place small,.job-row .job-source small{display:block}.job-row .job-source{grid-column:1/-1}.job-row .job-note-row{flex-wrap:wrap}}
 @media(max-width:540px){.job.job-row{grid-template-columns:1fr 1fr;gap:16px}.job-row .job-main{grid-column:1/-1}.job-row .job-pay strong{font-size:12px}.job-row .job-note-row .job-actions{width:100%}.search-shortcuts{gap:8px}}
+
+.results-layout {display:grid;grid-template-columns:205px minmax(0,1fr);gap:18px;align-items:start}
+.results-layout.without-facets {grid-template-columns:minmax(0,1fr)}
+.job-results {min-width:0}
+.job-facets {border:1px solid var(--line);border-radius:12px;padding:4px 15px;background:var(--sidebar)}
+.facet-heading {display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 0}
+.facet-heading button {background:none;border:0;padding:4px 0;color:var(--accent);cursor:pointer}
+.job-facets details {border-top:1px solid var(--line);padding:12px 0}
+.job-facets summary {display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none;cursor:pointer;font-size:.88rem;font-weight:700}
+.job-facets summary::-webkit-details-marker {display:none}
+.job-facets summary::after {content:'▾';color:var(--muted)}
+.job-facets details[open] > summary::after {content:'▴'}
+.facet-option {display:flex;align-items:flex-start;gap:8px;margin-top:9px;font-size:.81rem;cursor:pointer}
+.facet-option input {margin:2px 0 0;accent-color:var(--green);flex:none}
+.job-facets .facet-more {border:0;padding:10px 0 0}
+.job-facets .facet-more summary {color:var(--accent);font-size:.76rem}
+.pay-period {display:flex;justify-content:space-between;align-items:center;gap:6px;margin:9px 0;font-size:.75rem}
+.pay-period select,.salary-bounds input {background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:5px;padding:5px}
+.pay-period select {max-width:100%;min-width:0}
+.salary-bounds {display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:5px;align-items:center;font-size:.75rem}
+.salary-bounds input {min-width:0;width:100%}
+.pay-error {font-size:.75rem;color:var(--yellow);margin:6px 0}
+@media (max-width:1000px) {
+  .results-layout {grid-template-columns:minmax(0,1fr)}
+  .job-facets {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px}
+  .job-facets .facet-heading {grid-column:1/-1}
+}
+@media (max-width:500px) {
+  .job-facets {grid-template-columns:minmax(0,1fr)}
+}

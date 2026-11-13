@@ -30,6 +30,88 @@
   }
   const vancouverDay = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Vancouver',year:'numeric',month:'numeric',day:'numeric'});
   let renderedDay;
+  const rolePatterns = [
+    ['Artist', /\b(?:artists?|model(?:l)?ers?)\b/i],
+    ['Supervisor', /\bsupervisors?\b/i],
+    ['Lead', /\b(?:leads?|heads? of)\b/i],
+    ['TD', /\b(?:tds?|technical directors?)\b/i],
+    ['Assistant', /\bassistants?\b/i],
+    ['Mentor', /\b(?:mentors?|instructors?)\b/i],
+  ];
+  const presence = ['Remote', 'Hybrid', 'On-site', 'Not specified'];
+  const money = new Intl.NumberFormat('en-CA', {maximumFractionDigits: 2});
+  const locationKey = value => value.trim().toLowerCase();
+  const locations = job => (job.location || '').split(';').map(value => {
+    const trimmed = value.trim();
+    if (/^vancouver\s*,\s*(?:(?:bc|british columbia)\s*,\s*)?canada$/i.test(trimmed)) return 'Vancouver, BC, Canada';
+    return trimmed;
+  }).filter(Boolean);
+  function salaryBand(salary) {
+    const text = salary || '';
+    const amounts = [...text.matchAll(/\$\s*(\d[\d,]*(?:\.\d+)?)\s*(k\b)?/gi)]
+      .map(([, number, k]) => Number(number.replace(/,/g, '')) * (k ? 1000 : 1));
+    if (!amounts.length || amounts.some(amount => !Number.isFinite(amount))) return null;
+    const period = /hour|\/\s*hr\b/i.test(text) ? 'hour'
+      : /week|\/\s*wk\b/i.test(text) ? 'week'
+      : /month|\/\s*mo\b/i.test(text) ? 'month'
+      : /annual|year|\/\s*yr\b/i.test(text) ? 'year' : 'unknown';
+    const currency = /\bCAD\b|(?:CA|C)\$/i.test(text) ? 'CAD' : /\bUSD\b|US\$/i.test(text) ? 'USD' : 'unknown';
+    const [first, last = first] = amounts;
+    return {
+      period, currency,
+      low: /\bup to\b/i.test(text) ? 0 : first,
+      high: /\b(?:starting at|at least)\b/i.test(text) ? Infinity : last,
+    };
+  }
+  const salaryStops = {
+    year: [75000, 100000, 150000, 200000], hour: [25, 40, 60, 80],
+    week: [1000, 1500, 2000, 3000], month: [4000, 6000, 8000, 12000],
+    unknown: [50, 100, 2000, 100000],
+  };
+  const checked = id => new Set([...$(id).querySelectorAll('input:checked')].map(input => input.value));
+  function option([value, label]) {
+    return `<label class="facet-option"><input type="checkbox" value="${safe(value)}"><span>${safe(label)}</span></label>`;
+  }
+  function renderSalaryOptions() {
+    const stops = salaryStops[$('pay-period').value];
+    const edges = [0, ...stops, Infinity];
+    $('salary-options').innerHTML = edges.slice(0, -1).map((low, index) => {
+      const high = edges[index + 1];
+      const label = !low ? 'Under $' + money.format(high)
+        : high === Infinity ? '$' + money.format(low) + ' and up'
+        : '$' + money.format(low) + ' – $' + money.format(high);
+      return option([[low, high].join(':'), label]);
+    }).join('');
+  }
+  function renderLocationOptions() {
+    const choices = new Map(data.jobs.flatMap(locations).map(label => [locationKey(label), label]));
+    const items = [...choices].sort((a, b) => a[1].localeCompare(b[1])).map(option);
+    $('location-options').innerHTML = items.slice(0, 6).join('') + (items.length > 6
+      ? '<details class="facet-more"><summary>Show more</summary>' + items.slice(6).join('') + '</details>' : '');
+  }
+  function facetPredicate() {
+    const location = checked('location-options');
+    const roles = checked('role-options');
+    const arrangements = checked('presence-options');
+    const payRanges = [...checked('salary-options')].map(value => value.split(':').map(Number));
+    const min = $('pay-min').value;
+    const max = $('pay-max').value;
+    const period = $('pay-period').value;
+    const currency = $('pay-currency').value;
+    const validBounds = !min || !max || Number(min) <= Number(max);
+    $('pay-error').classList.toggle('hidden', validBounds);
+    if (validBounds && (min || max)) payRanges.push([min ? Number(min) : 0, max ? Number(max) : Infinity]);
+    return job => {
+      if (location.size && !locations(job).some(value => location.has(locationKey(value)))) return false;
+      if (roles.size && !rolePatterns.some(([role, pattern]) => roles.has(role) && pattern.test(job.title))) return false;
+      if (arrangements.size && !arrangements.has(job.arrangement || 'Not specified')) return false;
+      if (!payRanges.length && currency === 'all') return true;
+      const band = salaryBand(job.salary);
+      return band && (currency === 'all' || band.currency === currency)
+        && (!payRanges.length || (band.period === period
+          && payRanges.some(([low, high]) => band.low <= high && band.high >= low)));
+    };
+  }
   function render(){
     renderedDay=vancouverDay.format(new Date());
     const newJobs=new Set(data.jobs.filter(j=>{
@@ -46,6 +128,9 @@
     document.querySelector('.filters').classList.toggle('hidden',view==='signals');
     $('signals').innerHTML=(data.signals||[]).map(x=>`<article class="signal-card"><div class="signal-kicker">◉ POSSIBLE EARLY HIRING SIGNAL · ${safe(x.source||'Public news')}</div><h3>${safe(x.title)}</h3><p>${safe(x.summary||'Public production or staffing news; not a confirmed vacancy.')}</p><div class="signal-bottom"><span>${safe(dt(x.published_at||x.first_seen))}</span><a href="${safe(validUrl(x.url))}" target="_blank" rel="noopener noreferrer">Read evidence ↗</a></div></article>`).join('')||'<div class="empty-signal">No qualifying public hiring signals yet. The news feeds are checked at each scan.</div>';
     document.querySelectorAll('.nav-link').forEach(x=>x.classList.toggle('selected',x.dataset.view===view));
+    $('job-facets').classList.toggle('hidden',view==='signals');
+    $('results-layout').classList.toggle('without-facets',view==='signals');
+    const matchesFacets = facetPredicate();
     const q=$('search').value.trim().toLowerCase();const tier=$('tier').value;const sort=$('sort').value;
     let jobs=(data.jobs||[]).filter(j=>{
       const status=statuses[j.id] || '';
@@ -57,7 +142,7 @@
       if(view==='hidden' && status!=='hidden')return false;
       if(view==='all' && status==='hidden')return false;
       if(tier!=='all' && j.tier!==tier)return false;
-      return !q || `${j.title} ${j.company} ${j.location} ${j.excerpt||''}`.toLowerCase().includes(q);
+      return matchesFacets(j) && (!q || `${j.title} ${j.company} ${j.location} ${j.excerpt||''}`.toLowerCase().includes(q));
     });
     if(sort==='new')jobs.sort((a,b)=>new Date(b.first_seen)-new Date(a.first_seen));
     else if(sort==='company')jobs.sort((a,b)=>a.company.localeCompare(b.company));
@@ -83,9 +168,30 @@
   }
   document.querySelectorAll('.nav-link').forEach(el=>el.addEventListener('click',()=>{view=el.dataset.view;render();}));
   ['search','tier','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));
+  $('role-options').innerHTML = rolePatterns.map(([role]) => option([role, role])).join('');
+  $('presence-options').innerHTML = presence.map(value => option([value, value === 'On-site' ? 'In person' : value])).join('');
+  renderSalaryOptions();
+  $('job-facets').addEventListener('change', event => {
+    if (event.target.id === 'pay-period') {
+      $('pay-min').value = $('pay-max').value = '';
+      renderSalaryOptions();
+    }
+    render();
+  });
+  $('job-facets').addEventListener('input', event => {
+    if (['pay-min', 'pay-max'].includes(event.target.id)) render();
+  });
+  $('clear-facets').addEventListener('click', () => {
+    $('job-facets').querySelectorAll('input:checked').forEach(input => { input.checked = false; });
+    $('pay-min').value = $('pay-max').value = '';
+    $('pay-period').value = 'year';
+    $('pay-currency').value = 'all';
+    renderSalaryOptions();
+    render();
+  });
   $('sources-toggle').addEventListener('click',()=>{const closed=$('source-panel').classList.toggle('hidden');$('sources-toggle').setAttribute('aria-expanded',String(!closed));});
   $('jobs').addEventListener('click',e=>{const el=e.target.closest('button[data-action]');if(el)setStatus(el.dataset.id,el.dataset.action);});
-  fetch('./data/jobs.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Data unavailable');return r.json();}).then(d=>{data=d;render();}).catch(err=>{$('top-status').textContent='Cannot load job data';console.warn(err);render();});
+  fetch('./data/jobs.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Data unavailable');return r.json();}).then(d=>{data=d;renderLocationOptions();render();}).catch(err=>{$('top-status').textContent='Cannot load job data';console.warn(err);render();});
   function refreshDay(){
     if(vancouverDay.format(new Date())!==renderedDay)render();
   }
