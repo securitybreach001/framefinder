@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 from jobwatch.core import (analyze, make_job, merge_state, fetch_greenhouse,
-                           fetch_jazzhr, fetch_jobicy, run, html_candidates)
+                           fetch_bamboohr, fetch_jazzhr, fetch_jobicy, run, html_candidates, salary_hint)
 from bs4 import BeautifulSoup
 
 ANIM = {'id':'stellar','name':'Stellar Creative Lab','studio':'animation','kind':'jazzhr'}
@@ -140,3 +140,41 @@ class GroupedResults(unittest.TestCase):
         j=job(desc='Hybrid. Salary CAD $105,000 - $130,000 per year')
         self.assertIn('$105,000',salary_hint(j))
         self.assertEqual(guess_arrangement(j),'Hybrid')
+
+class PayAndDiscovery(unittest.TestCase):
+    def test_bamboohr_reads_separate_compensation_field(self):
+        source={**ANIM,'board':'iconcreative','kind':'bamboohr'}
+        session=Mock()
+        session.get.return_value.json.side_effect=[
+            {'result':[{'id':50,'jobOpeningName':'Intermediate FX Artist'}]},
+            {'result':{'jobOpening':{
+                'description':'Create effects in Houdini.',
+                'compensation':'$74,863.88 - $85,000.00 per year',
+                'location':{'city':'Vancouver','province':'BC'},
+            }}},
+        ]
+        jobs=fetch_bamboohr(source,session)
+        self.assertEqual(salary_hint(jobs[0]),'$74,863.88 - $85,000.00 per year')
+
+    def test_active_cross_post_keeps_inactive_record_discovery_date(self):
+        from unittest.mock import patch
+        previous='2026-11-11T18:00:00+00:00'
+        now='2026-11-12T18:00:00+00:00'
+        second_source={**ANIM,'id':'stellar-second-board'}
+        state={'sources':{},'jobs':{}}
+        old=job()
+        state,_=merge_state(state,[(ANIM,[old],None)],previous)
+        state,_=merge_state(state,[(ANIM,[],None)],previous)
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)
+            state_path=root/'state.json'
+            state_path.write_text(json.dumps(state),encoding='utf-8')
+            config_path=root/'sources.json'
+            config_path.write_text(json.dumps([second_source]),encoding='utf-8')
+            new=make_job(second_source,'FX Lead','https://example.com/job/124','Vancouver, BC')
+            with patch('jobwatch.core.utc_now',return_value=now):
+                public=run(config_path,state_path,root/'site.json',
+                           fetcher=lambda source: [job(src=source),new],
+                           notifier=lambda jobs: False)
+        dates={j['title']:j['first_seen'] for j in public['jobs']}
+        self.assertEqual(dates,{'Senior 3D FX Artist':previous,'FX Lead':now})
