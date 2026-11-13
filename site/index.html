@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1018">
   <meta name="description" content="A personal job radar for animation, Houdini FX, procedural tools and simulation opportunities.">
   <title>Framefinder — your Houdini job radar</title>
-  <link rel="stylesheet" href="./styles.css?v=job-filters">
+  <link rel="stylesheet" href="./styles.css?v=orbital-array">
 </head>
 <body>
   <div class="app-shell">
@@ -41,7 +41,7 @@
           <h1>Find your next<br><em>great thing.</em></h1>
           <p>Animation-first opportunities in Houdini, FX, procedural creation, simulation and creative tech — without the daily hunt.</p>
         </div>
-        <div class="radar-art" aria-hidden="true"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="scanner"></div><span class="radar-core"></span><span class="radar-ping a"></span><span class="radar-ping b"></span><span class="radar-ping c"></span></div>
+        <div class="radar-art" aria-hidden="true"><canvas></canvas></div>
       </header>
       <section class="metrics" aria-label="Search overview">
         <div class="metric"><div class="metric-top">MATCHED ROLES <span class="metric-symbol">↗</span></div><div class="metric-value" id="count-matches">—</div><div class="metric-foot">Animation & Houdini fits</div></div>
@@ -83,6 +83,7 @@
       <footer><div><span class="footer-star">✳</span> framefinder <span class="footer-sub">Independent, free & built for one person.</span></div><div class="footer-note">Statuses are stored only in this browser · <a href="https://github.com" target="_blank" rel="noopener noreferrer">Automation runs on GitHub</a></div></footer>
     </main>
   </div>
+  <script src="./orbital-radar.js" defer></script>
   <script src="./app.js?v=location-filter" defer></script>
 </body>
 </html>
