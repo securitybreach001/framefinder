@@ -40,8 +40,15 @@ CANADA = re.compile(r"\b(canada|canadian|canada.wide|across canada|canadians|bri
 VANCOUVER = re.compile(r"\b(vancouver|burnaby|richmond|new westminster|surrey|north vancouver|west vancouver|coquitlam|delta|port moody|port coquitlam|metro vancouver)\b", re.I)
 US_ONLY = re.compile(r"\b(united states (only|remote|based)|us[- ]only|usa[- ]only|u\.s\. (residents|only|based)|must (reside|live|be located) in (the )?(usa|united states)|authorized to work in (the )?(u\.s\.|usa|united states))\b", re.I)
 WORLDWIDE = re.compile(r"\b(worldwide|anywhere|global|globally|no location restrictions|any country)\b", re.I)
-MONEY = r'(?:CAD\s*)?(?:CA\$|\$)\s*(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?'
-SALARY = re.compile(rf'(?i)(?P<low>{MONEY})\s*(?:[-–—]|\bto\b|\band\b)\s*(?P<high>{MONEY})')
+AMOUNT = r'(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?\s*[kK]?'
+DOLLAR = r'(?:(?:CA|US|C)\$|\$)'
+SALARY = re.compile(
+    rf'(?P<low>{DOLLAR}\s*{AMOUNT})\s*(?:(?:CAD|USD)\s*)?'
+    rf'(?:[-–—]|\bto\b|\band\b)\s*(?P<high>{DOLLAR}?\s*{AMOUNT})(?![\w,.]\d|\w)',
+    re.I,
+)
+PAY_CONTEXT = re.compile(r'\b(salary|compensation|pay|wages?|market range|hourly rate|annual range)\b', re.I)
+
 SIGNAL_TERMS = re.compile(r'(?i)\b(staffing up|hiring|recruitment|recruiting|greenlit|greenlight|new animated|animation slate|production begins|production underway|animation production|opens? (a )?(new )?studio|expansion|expanding|new series|new feature|renewed for|commissioned|new season)\b')
 STUDIO_SIGNAL = re.compile(r'(?i)\b(animation|animated|studio|feature|series|fx|houdini|cgi|cg)\b')
 EOI = re.compile(r"\b(expression of interest|general application|talent pool|evergreen)\b", re.I)
@@ -163,9 +170,7 @@ def fetch_eightfold(src, session=None):
             jobs.append(make_job(src,title,url,loc,desc,raw_id=rid or url,
                                  remote=bool(REMOTE.search(loc))))
         if len(rows)<10 or start+len(rows)>=int(data.get('count') or 0):break
-    # Retrieve details only when the listing itself lacks project/team evidence.
-    candidates=dedupe_jobs(jobs)
-    return enrich_candidate_details(candidates,session)
+    return dedupe_jobs(jobs)
 
 
 def fetch_jazzhr(src, session=None):
@@ -181,7 +186,7 @@ def fetch_jazzhr(src, session=None):
             continue
         near=plain(a.parent.parent.get_text(" ",strip=True))[:350] if a.parent and a.parent.parent else ""
         candidates.append(make_job(src,title,url,near or src.get("default_location", ""),""))
-    return enrich_candidate_details(dedupe_jobs(candidates), session)
+    return dedupe_jobs(candidates)
 
 
 def fetch_bamboohr(src, session=None):
@@ -234,7 +239,7 @@ def fetch_workable(src, session=None):
     except (ValueError,requests.RequestException) as exc:
         LOG.warning('%s public widget unavailable: %s, trying HTML',src['id'],exc)
     if candidates:
-        return enrich_candidate_details(dedupe_jobs(candidates),session)
+        return dedupe_jobs(candidates)
     # Fall back to visible HTML links, if the widget changes.
     copy=dict(src,kind='html',url=base)
     return fetch_html(copy,session)
@@ -289,58 +294,101 @@ def fetch_html(src, session=None):
         if src.get('empty_message') and src['empty_message'] in content:
             return []
         raise ValueError('No parseable job links. This page may require JavaScript or a new adapter.')
-    return enrich_candidate_details(candidates,session)
+    return candidates
 
 
-def job_posted_at(soup, expected_title):
-    """Trust only a specific JobPosting date, not arbitrary page timestamps."""
+def matching_job_postings(soup, expected_title):
+    def walk(obj):
+        if isinstance(obj, list):
+            for item in obj:
+                yield from walk(item)
+        elif isinstance(obj, dict):
+            kind = obj.get('@type')
+            if kind == 'JobPosting' or (isinstance(kind, list) and 'JobPosting' in kind):
+                yield obj
+            for item in obj.values():
+                yield from walk(item)
+
     for script in soup.select('script[type="application/ld+json"]'):
         try:
-            tree=json.loads(script.string or script.get_text())
+            tree = json.loads(script.string or script.get_text())
         except (ValueError, TypeError):
             continue
-        def walk(obj):
-            if isinstance(obj,list):
-                for el in obj: yield from walk(el)
-            elif isinstance(obj,dict):
-                kind=obj.get('@type','')
-                if kind=='JobPosting' or (isinstance(kind,list) and 'JobPosting' in kind):yield obj
-                for el in obj.values():
-                    if isinstance(el,(dict,list)):yield from walk(el)
         for posting in walk(tree):
-            title=plain(posting.get('title',''))
-            if title and normalized_words(title)!=normalized_words(expected_title):
-                continue
-            published=posting.get('datePosted')
-            if isinstance(published,str) and re.match(r'^\d{4}-\d{2}-\d{2}',published):
-                return published
-    return None
+            if normalized_words(plain(posting.get('title'))) == normalized_words(expected_title):
+                yield posting
 
 
-def enrich_candidate_details(candidates, session=None):
-    """Fetch only candidate titles to avoid crawling an entire careers board."""
-    result=[]
-    for job in candidates:
-        if not potential_role(job['title']):
-            continue
-        if job.get('description') and len(job['description'])>280:
-            result.append(job); continue
+def detail_text(markup):
+    soup = BeautifulSoup(markup or '', 'html.parser')
+    main = soup.find('main') or soup.find('article') or soup.body or soup
+    for tag in main(['script', 'style', 'nav', 'header', 'footer', 'form', 'noscript']):
+        tag.decompose()
+    for block in main(['p', 'li', 'br', 'h1', 'h2', 'h3', 'h4', 'section', 'div']):
+        block.insert_after('\n')
+    return '\n'.join(line.strip() for line in main.get_text(' ').splitlines() if line.strip())
+
+
+def eightfold_description(job, src):
+    if not str(job.get('external_id') or '').isdigit():
+        return ''
+    url = f"{src['host'].rstrip('/')}/api/apply/v2/jobs/{job['external_id']}"
+    payload = http_get(url, params={'domain': src['domain']}).json()
+    if not isinstance(payload, dict):
+        return ''
+    data = payload.get('data')
+    nested = data.get('position') if isinstance(data, dict) else None
+    for item in (payload, payload.get('position'), data, nested):
+        if isinstance(item, dict):
+            description = item.get('jobDescription') or item.get('job_description') or item.get('description')
+            if isinstance(description, str) and description:
+                return detail_text(description)
+    return ''
+
+
+def enrich_job_details(job, src):
+    """Read a single posting; leave feed and previously verified values available on failure."""
+    if urlparse(job['url']).scheme not in ('http', 'https'):
+        return
+    posting = {}
+    description = ''
+    page_text = ''
+    try:
+        response = http_get(job['url'])
+        soup = BeautifulSoup(response.text, 'html.parser')
+        posting = next(matching_job_postings(soup, job['title']), {})
+        if isinstance(posting.get('description'), str):
+            description = detail_text(posting['description'])
+        page_text = detail_text(response.text)
+    except requests.RequestException as exc:
+        LOG.warning('Detail fetch failed %s: %s', job['url'], exc)
+    if src.get('kind') == 'eightfold' and not description:
         try:
-            resp=http_get(job['url'],session)
-            soup=BeautifulSoup(resp.text,'html.parser')
-            if not job.get('posted_at'):
-                job['posted_at']=job_posted_at(soup,job['title'])
-            main=soup.find('main') or soup.find('article') or soup.body or soup
-            for tag in main(['script','style','nav','header','footer','form']):tag.decompose()
-            description=main.get_text(' ',strip=True)
-            job['description']=re.sub(r'\s+',' ',description)[:16000]
-            # Only infer the location from the header of an individual job page, not the whole site.
-            header=job['description'][:420]
-            if VANCOUVER.search(header): job['location']='Vancouver, BC, Canada'
-        except requests.RequestException as exc:
-            LOG.warning('Detail fetch failed %s: %s',job['url'],exc)
-        result.append(job)
-    return result
+            description = eightfold_description(job, src)
+        except (requests.RequestException, ValueError, AttributeError) as exc:
+            LOG.warning('Eightfold job detail unavailable %s: %s', job['url'], exc)
+    if not page_text and not description and not posting:
+        return
+
+    detail = description or page_text
+    structured_remote = str(posting.get('jobLocationType', '')).upper() == 'TELECOMMUTE'
+    if posting or description or src.get('kind') != 'eightfold':
+        salary = structured_salary(posting.get('baseSalary')) or salary_hint({'description': detail})
+        if salary == 'Not listed' and description and src.get('kind') != 'eightfold':
+            salary = salary_hint({'description': page_text})
+        if salary != 'Not listed':
+            job['salary'] = salary
+        arrangement = guess_arrangement({'description': detail, 'remote': structured_remote})
+        if arrangement != 'Not specified':
+            job['arrangement'] = arrangement
+        if description or not job.get('description') or not job.get('location'):
+            feed_text = job.get('description', '')
+            job['description'] = '\n'.join(filter(None, (feed_text, detail)))[:16000]
+    published = posting.get('datePosted')
+    if not job.get('posted_at') and isinstance(published, str) and re.match(r'^\d{4}-\d{2}-\d{2}', published):
+        job['posted_at'] = published
+    if (not job.get('location') or src.get('kind') in ('html', 'jazzhr', 'workable')) and VANCOUVER.search(detail[:420]):
+        job['location'] = 'Vancouver, BC, Canada'
 
 
 def fetch_jobicy(src, session=None):
@@ -390,35 +438,97 @@ def group_key(j):
 
 
 def guess_arrangement(j):
-    location=j.get('location',''); desc=j.get('description','')[:1800]
-    label=location+' '+desc
-    if re.search(r'(?i)\bhybrid\b', label):return 'Hybrid'
-    if j.get('remote') or re.search(r'(?i)\b(fully remote|100% remote|remote[- ]first|work remotely)\b',label):return 'Remote'
-    if re.search(r'(?i)\b(on[- ]site|onsite|in.person|in.office)\b',label):return 'On-site'
+    if j.get('arrangement') in ('Hybrid', 'Remote', 'On-site'):
+        return j['arrangement']
+    location = j.get('location', '')
+    desc = j.get('description', '')
+    if re.search(r'\bhybrid\b(?![- ](?:cloud|rendering|pipeline|engine|simulation|system|workflow|approach))', location, re.I) or re.search(
+        r'\b(?:hybrid (?:role|work|schedule|model|position|arrangement)|work(?:ing)? hybrid|(?:work type|work arrangement|workplace type|location)\s*:?\s*hybrid)\b|^\s*hybrid\s*$', desc, re.I | re.M
+    ):
+        return 'Hybrid'
+    if j.get('remote') or REMOTE.search(location) or re.search(
+        r'\b(?:fully remote|100% remote|remote[- ]first|remote (?:role|position)|work remotely|work from home|(?:work type|work arrangement|workplace type)\s*:?\s*remote)\b|^\s*remote\s*$', desc, re.I | re.M
+    ):
+        return 'Remote'
+    if re.search(r'\b(?:on[- ]?site|in[- ]person|in[- ]office)\b', location, re.I) or re.search(
+        r'\b(?:(?:on[- ]?site|in[- ]person|in[- ]office) (?:role|work|position|required)|work(?:ing)? (?:on[- ]?site|in[- ]person|in (?:the |our )?office)|(?:work type|work arrangement|workplace type)\s*:?\s*(?:on[- ]?site|in[- ]person|in[- ]office))\b|^\s*(?:on[- ]?site|in[- ]person|in[- ]office)\s*$', desc, re.I | re.M
+    ):
+        return 'On-site'
     return 'Not specified'
 
 
-def salary_hint(j):
-    """Extract explicit two-amount salary ranges from employer descriptions.
+def structured_salary(base):
+    if not isinstance(base, dict):
+        return ''
+    currency = str(base.get('currency', '')).upper()
+    if currency not in ('CAD', 'USD', ''):
+        return ''
+    value = base.get('value')
+    if not isinstance(value, dict):
+        value = {'value': value}
+    low = value.get('minValue', value.get('value'))
+    high = value.get('maxValue', value.get('value'))
+    try:
+        low, high = float(low), float(high)
+    except (TypeError, ValueError):
+        return ''
+    if not 0 < low <= high <= 10000000:
+        return ''
+    unit = str(value.get('unitText', '')).lower()
+    period = '/' + unit if unit in ('year', 'hour', 'week', 'month') else ''
+    prefix = currency + ' ' if currency else ''
+    return format_salary(prefix, low, high, period)
 
-    Supports $80,000-$90,000, $80,000 to $90,000 and
-    'the salary range is $80,000 and $90,000 CAD per year'.
-    """
-    if j.get('salary') and j['salary']!='Not listed':return str(j['salary'])[:90]
-    desc=j.get('description','')
-    match=SALARY.search(desc)
-    if not match:return 'Not listed'
-    low=float(re.sub(r'[^\d.]','',match.group('low')))
-    high=float(re.sub(r'[^\d.]','',match.group('high')))
-    if low<=0 or high<low or high>10000000:return 'Not listed'
-    context=desc[max(0,match.start()-100):min(len(desc),match.end()+80)]
-    curr='CAD ' if re.search(r'\bCAD\b|CA\$',context,re.I) else ''
-    period=''
-    if re.search(r'(?i)(per\s+year|/\s*(year|yr)|annually|annual\s+salary)',context):period='/year'
-    elif re.search(r'(?i)(per\s+(hour|hr)|/\s*(hour|hr)|hourly)',context):period='/hour'
-    elif re.search(r'(?i)(per\s+week|/\s*(week|wk)|weekly)',context):period='/week'
-    fmt=lambda val:f'{val:,.0f}' if val.is_integer() else f'{val:,.2f}'
-    return f'{curr}${fmt(low)}–${fmt(high)}{period}'
+
+def format_salary(currency, low, high, period):
+    def fmt(value):
+        return f'{value:,.0f}' if value.is_integer() else f'{value:,.2f}'
+
+    high_text = '–$' + fmt(high) if high != low else ''
+    return currency + '$' + fmt(low) + high_text + period
+
+
+def salary_hint(j):
+    """Find dollar ranges throughout the posting, preferring compensation wording."""
+    if j.get('salary') and j['salary'] != 'Not listed':
+        return str(j['salary'])[:90]
+    desc = j.get('description', '')
+    candidates = []
+    for match in SALARY.finditer(desc):
+        def amount(text):
+            number = float(re.sub(r'[^\d.]', '', text))
+            return number * 1000 if text.strip().lower().endswith('k') else number
+
+        low, high = (amount(match[key]) for key in ('low', 'high'))
+        if not 0 < low <= high <= 10000000:
+            continue
+        before = desc[max(0, match.start()-135):match.start()]
+        after = desc[match.end():match.end()+75]
+        nearby = before + match[0] + after
+        if re.search(r'\b(?:budget|equipment stipend|sign[- ]on bonus|referral bonus)\s*(?:of|is|:)?\s*$', before, re.I):
+            continue
+        score = int(bool(PAY_CONTEXT.search(nearby))) * 2 + int('$' in match['high'])
+        candidates.append((score, low, high, nearby, match[0] + after))
+    if not candidates:
+        return 'Not listed'
+    _, low, high, nearby, suffix = max(candidates, key=lambda item: item[0])
+    currency = ''
+    if re.search(r'\bCAD\b|(?:CA|C)\$', suffix, re.I):
+        currency = 'CAD '
+    elif re.search(r'\bUSD\b|US\$', suffix, re.I):
+        currency = 'USD '
+    period = ''
+    for unit, pattern in (
+        ('year', r'per\s+year|/\s*(?:year|yr)\b|annually|annual(?:ized)?\s+(?:salary|pay|compensation)'),
+        ('hour', r'per\s+hour|/\s*(?:hour|hr)\b|hourly'),
+        ('week', r'per\s+week|/\s*(?:week|wk)\b|weekly'),
+        ('month', r'per\s+month|/\s*(?:month|mo)\b|monthly'),
+    ):
+        if re.search(pattern, nearby, re.I):
+            period = '/' + unit
+            break
+
+    return format_salary(currency, low, high, period)
 
 
 def grouped_jobs(jobs):
@@ -738,6 +848,27 @@ def run(sources_path=SOURCES_PATH,state_path=STATE_PATH,site_path=SITE_PATH, fet
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
         results=list(pool.map(do_one,sources))
     now=utc_now()
+    if fetcher is None:
+        # Include previously published active listings when their board is temporarily unavailable.
+        source_by_id = {src['id']: src for src in sources}
+        current = [(job, src) for src, jobs, error in results for job in jobs
+                   if not error and potential_role(job['title']) and analyze(job)[0] != 'excluded']
+        current_ids = {job['id'] for job, _ in current}
+        successful = {src['id'] for src, _, error in results if not error}
+        stale = [(job, source_by_id[job['source_id']]) for job in state['jobs'].values()
+                 if job.get('active') and job['id'] not in current_ids and job['source_id'] in source_by_id
+                 and (job['source_id'] not in successful or job.get('source_kind') in ('jobicy', 'remotive', 'arbeitnow'))]
+        # Serialize requests per host while checking unrelated career sites in parallel.
+        by_host = {}
+        for item in current + stale:
+            by_host.setdefault(urlparse(item[0]['url']).netloc, []).append(item)
+        def read_host(items):
+            for job, src in items:
+                enrich_job_details(job, src)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+            list(pool.map(read_host, by_host.values()))
+        for job, _ in stale:
+            job.pop('description', None)
     state, new=merge_state(state,results,now)
     # Don't make network requests during synthetic test runs with a custom fetcher.
     if fetcher is None:refresh_jobicy_status(state)
