@@ -198,9 +198,13 @@ def fetch_bamboohr(src, session=None):
         detail=http_get(f'{base}/careers/{ident}/detail',session).json().get('result',{}).get('jobOpening',{})
         loc=detail.get('location') or x.get('location') or {}
         location=', '.join(v for v in [loc.get('city'),loc.get('state') or loc.get('province'),loc.get('addressCountry')] if v)
-        jobs.append(make_job(src,title,detail.get('jobOpeningShareUrl') or f'{base}/careers/{ident}',
-                             location,detail.get('description',''),raw_id=ident,posted_at=detail.get('datePosted'),
-                             remote=x.get('isRemote') is True))
+        job=make_job(src,title,detail.get('jobOpeningShareUrl') or f'{base}/careers/{ident}',
+                     location,detail.get('description',''),raw_id=ident,posted_at=detail.get('datePosted'),
+                     remote=x.get('isRemote') is True)
+        compensation=detail.get('compensation')
+        if isinstance(compensation,str):
+            job['salary']=plain(compensation)
+        jobs.append(job)
     return jobs
 
 
@@ -616,7 +620,8 @@ def merge_state(state, source_results, now):
             arrangement=guess_arrangement(job)
             if arrangement=='Not specified':arrangement=existing.get('arrangement','Not specified')
             record={**existing,**job,'tier':tier,'score':score,'reasons':reasons,
-                    'first_seen':existing.get('first_seen',now),'last_seen':now,'active':True,
+                    'first_seen':existing.get('first_seen','') if jid in state['jobs'] else now,
+                    'last_seen':now,'active':True,
                     'salary':extracted_salary,'arrangement':arrangement,
                     'posted_at':job.get('posted_at') or existing.get('posted_at'),
                     'notified':existing.get('notified',False)}
@@ -743,6 +748,13 @@ def run(sources_path=SOURCES_PATH,state_path=STATE_PATH,site_path=SITE_PATH, fet
             if job['tier']=='match' and job['active'] and group_key(job) in notified_keys:
                 job['notified']=True
     active=grouped_jobs([j for j in state['jobs'].values() if j.get('active')])
+    first_seen_by_group={}
+    for job in state['jobs'].values():
+        key=group_key(job)
+        first_seen=job.get('first_seen') or ''
+        first_seen_by_group[key]=min(first_seen_by_group.get(key,first_seen),first_seen)
+    for job in active:
+        job['first_seen']=first_seen_by_group[group_key(job)]
     attach_verified_ads(active,load_verified_ads())
     signals=sorted(state['signals'].values(),key=lambda x:x.get('published_at') or x.get('first_seen',''),reverse=True)[:120]
     from datetime import timedelta
