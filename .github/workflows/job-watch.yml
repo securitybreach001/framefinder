@@ -1,6 +1,4 @@
-
 name: Framefinder - Search and publish
-
 on:
   schedule:
     - cron: '12 8,18 * * *'
@@ -11,16 +9,14 @@ on:
     paths-ignore:
       - 'data/jobs.json'
       - 'site/data/jobs.json'
-
 permissions:
+  actions: read
   contents: write
   pages: write
   id-token: write
-
 concurrency:
   group: framefinder
   cancel-in-progress: false
-
 jobs:
   check-and-publish:
     runs-on: ubuntu-latest
